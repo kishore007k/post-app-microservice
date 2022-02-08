@@ -63,8 +63,23 @@ app.get("/post/:id/comment", async (req, res) => {
 	}
 });
 
-app.post("/events", (req, res) => {
+app.post("/events", async (req, res) => {
 	console.log(`${req.body.event} event received`);
+	const { event, data } = req.body;
+
+	if (event === "commentModerated") {
+		const { comment: new_comment, status: newStatus, postId: postIdId } = data;
+
+		const commentToUpdate = await Comment.findOneAndUpdate(
+			{ postId: postIdId, comment: new_comment },
+			{ $set: { "comments.$.status": newStatus } }
+		);
+
+		commentToUpdate.save();
+
+		return res.status(200).send(commentToUpdate);
+	}
+
 	return res.status(200).send(`${req.body.event} event received`);
 });
 

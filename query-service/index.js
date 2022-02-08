@@ -25,38 +25,27 @@ app.get("/posts", async (req, res) => {
 	}
 });
 
-app.post("/posts", (req, res) => {
-	try {
-		const { postId, title, content } = req.body;
-		const newPost = new Query({
-			postId,
-			title,
-			content,
-		});
-		newPost.save();
-		return res.status(200).send({ message: "Post added successfully" });
-	} catch (error) {
-		return res.status(500).send(error);
-	}
+app.get("/posts/:id", async (req, res) => {
+	const { id } = req.params;
+	const post = await Query.findOne({ postId: id });
+	return res.status(200).send(post);
 });
 
-app.post("/posts/:id/comment", async (req, res) => {
+app.get("/posts/:id/comment", async (req, res) => {
 	try {
-		const { comment, status } = req.body;
 		const { id } = req.params;
-		const newComment = await Query.findOneAndUpdate(
-			{ postId: id },
-			{ $push: { comments: { comment, status } } },
-			{ new: true }
-		);
-		newComment.save();
-		return res.status(200).send({ message: "Comment added successfully" });
+
+		const comments = await Query.find({ postId: id });
+
+		return res.status(200).send(comments[0].comments);
 	} catch (error) {
 		return res.status(500).send(error);
 	}
 });
 
 app.post("/events", async (req, res) => {
+	console.log(`${req.body.event} event received`);
+
 	const { event, data } = req.body;
 
 	switch (event) {
@@ -77,6 +66,15 @@ app.post("/events", async (req, res) => {
 				content,
 			});
 			newPost.save();
+			break;
+
+		case "commentModerated":
+			const { comment: new_comment, status: newStatus, postId: postIdId } = data;
+			const commentToUpdate = await Query.findOneAndUpdate(
+				{ postId: postIdId, "comments.comment": new_comment },
+				{ $set: { "comments.$.status": newStatus } }
+			);
+			commentToUpdate.save();
 			break;
 
 		default:

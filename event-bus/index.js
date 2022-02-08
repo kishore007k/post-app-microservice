@@ -17,21 +17,30 @@ app.get("/", (req, res) => {
 });
 
 app.post("/event", (req, res) => {
-	const { event, data } = req.body;
+	try {
+		const { event, data } = req.body;
 
-	const eventData = {
-		event,
-		data,
-	};
+		const eventData = {
+			event,
+			data,
+		};
 
-	// Post Service
-	axios.post("http://localhost:4000/events", eventData);
-	// Comment Service
-	axios.post("http://localhost:4001/events", eventData);
-	// Query Service
-	axios.post("http://localhost:4003/events", eventData);
+		// Post Service
+		axios.post("http://localhost:4000/events", eventData);
 
-	return res.status(201).send("Event received");
+		// Comment Service
+		axios.post("http://localhost:4001/events", eventData);
+
+		// Query Service
+		axios.post("http://localhost:4003/events", eventData);
+
+		// Moderator Service
+		axios.post("http://localhost:4004/events", eventData);
+
+		return res.status(201).send("Event received");
+	} catch (error) {
+		return res.status(500).send(error);
+	}
 });
 
 app.listen(4002, () => {
