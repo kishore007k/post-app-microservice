@@ -34,7 +34,8 @@ app.post("/post/:id/comment", (req, res) => {
 			status: "pending",
 		});
 
-		axios.post("http://localhost:4002/event", {
+		// Post Request to Event Bus Service
+		axios.post("http://localhost:4005/event", {
 			event: "commentCreated",
 			data: {
 				comment,

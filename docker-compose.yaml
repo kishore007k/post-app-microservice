@@ -2,7 +2,7 @@ version: "3"
 
 services:
   postService:
-    image: post_service
+    image: kishore007k/post_service
     container_name: post_service
     ports:
       - "4000:4000"
@@ -12,7 +12,7 @@ services:
       - post_app_network
   
   commentService:
-    image: comment_service
+    image: kishore007k/comment_service
     container_name: comment_service
     ports:
       - "4001:4001"
@@ -21,31 +21,31 @@ services:
     networks:
       - post_app_network
 
-  eventbusService:
-    image: eventbus_service
-    container_name: eventbus_service
-    ports:
-      - "4002:4002"
-    environment:
-      MONGO_DB: mongodb+srv://admin:gzus48nOUuJvuBbe@nextjs.pag0h.mongodb.net/eventbusService?retryWrites=true&w=majority
-    networks:
-      - post_app_network
-
   queryService:
-    image: query_service
+    image: kishore007k/query_service
     container_name: query_service
     ports:
-      - "4003:4003"
+      - "4002:4002"
     environment:
       MONGO_DB: mongodb+srv://admin:gzus48nOUuJvuBbe@nextjs.pag0h.mongodb.net/queryService?retryWrites=true&w=majority
     networks:
       - post_app_network
 
   moderatorService:
-    image: moderator_service
+    image: kishore007k/moderator_service
     container_name: moderator_service
     ports:
-      - "4004:4004"
+      - "4003:4003"
+    networks:
+      - post_app_network
+
+  eventbusService:
+    image: kishore007k/eventbus_service
+    container_name: eventbus_service
+    ports:
+      - "4005:4005"
+    environment:
+      MONGO_DB: mongodb+srv://admin:gzus48nOUuJvuBbe@nextjs.pag0h.mongodb.net/eventbusService?retryWrites=true&w=majority
     networks:
       - post_app_network
 

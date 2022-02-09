@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eventbus-depl
+  labels:
+    app: eventbus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eventbus
+  template:
+    metadata:
+      labels:
+        app: eventbus  # <-- More like a class name in react --> #
+    spec:
+      containers:
+        - name: eventbus
+          image: kishore007k/eventbus_service
+          ports:
+            - name: eventbus
+              containerPort: 4005
+
+---
+
+# Cluster IP Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: eventbus-srv
+spec:
+  selector:
+    app: eventbus
+  type: ClusterIP
+  ports:
+    - name: eventbus
+      protocol: TCP
+      port: 4005
+      targetPort: 4005

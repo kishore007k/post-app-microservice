@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: posts-depl
+  labels:
+    app: posts
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: posts
+  template:
+    metadata:
+      labels:
+        app: posts  # <-- More like a class name in react --> #
+    spec:
+      containers:
+        - name: posts
+          image: kishore007k/post_service
+          ports:
+            - name: posts
+              containerPort: 4000
+
+---
+
+# Cluster IP Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: clusterip-posts-srv
+spec:
+  selector:
+    app: posts
+  type: ClusterIP
+  ports:
+    - name: posts
+      protocol: TCP
+      port: 4000
+      targetPort: 4000

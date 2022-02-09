@@ -35,7 +35,8 @@ app.post("/post", (req, res) => {
 		const { title, content } = req.body;
 		const post = new Post({ title, content });
 
-		axios.post("http://localhost:4002/event", {
+		// Post request to Event Bus Service
+		axios.post("http://eventbus-srv:4005/event", {
 			event: "postCreated",
 			data: {
 				title,
@@ -48,7 +49,7 @@ app.post("/post", (req, res) => {
 
 		return res.status(201).send({ message: "Post created", post });
 	} catch (error) {
-		console.log(error);
+		console.log({ error });
 		return res.status(500).send(error);
 	}
 });

@@ -89,8 +89,8 @@ mongoose.connect(MONGO_DB_URL, (err) => {
 		console.log(err);
 	} else {
 		console.log("Connected to MongoDB");
-		app.listen(4003, () => {
-			console.log(`Query Service is running on http://localhost:${4003}`);
+		app.listen(4002, () => {
+			console.log(`Query Service is running on http://localhost:${4002}`);
 		});
 	}
 });

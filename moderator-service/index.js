@@ -27,7 +27,7 @@ app.post("/events", (req, res) => {
 		axios.post("http://localhost:4001/events", updatedData);
 
 		// Query Service
-		axios.post("http://localhost:4003/events", updatedData);
+		// axios.post("http://localhost:4002/events", updatedData);
 
 		return res.status(200).send({ message: "Comment moderated successfully" });
 	}
@@ -35,6 +35,6 @@ app.post("/events", (req, res) => {
 	return res.status(201).send("Event received");
 });
 
-app.listen(4004, () => {
-	console.log(`Moderator Service listening on http://localhost:4004`);
+app.listen(4003, () => {
+	console.log(`Moderator Service listening on http://localhost:4003`);
 });

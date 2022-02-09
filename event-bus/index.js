@@ -2,8 +2,15 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const axios = require("axios");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const Events = require("./models/Events");
+
+dotenv.config();
 
 const app = express();
+
+const MONGO_DB_URL = process.env.MONGO_DB;
 
 const corsOptions = {
 	origin: "*",
@@ -17,6 +24,8 @@ app.get("/", (req, res) => {
 });
 
 app.post("/event", (req, res) => {
+	console.log(`${req.body.event} event received`);
+
 	try {
 		const { event, data } = req.body;
 
@@ -25,17 +34,21 @@ app.post("/event", (req, res) => {
 			data,
 		};
 
+		const events = new Events(eventData);
+
+		events.save();
+
 		// Post Service
-		axios.post("http://localhost:4000/events", eventData);
+		axios.post("http://clusterip-posts-srv:4000/events", eventData);
 
 		// Comment Service
-		axios.post("http://localhost:4001/events", eventData);
+		// axios.post("http://localhost:4001/events", eventData);
 
 		// Query Service
-		axios.post("http://localhost:4003/events", eventData);
+		// axios.post("http://localhost:4002/events", eventData);
 
 		// Moderator Service
-		axios.post("http://localhost:4004/events", eventData);
+		// axios.post("http://localhost:4003/events", eventData);
 
 		return res.status(201).send("Event received");
 	} catch (error) {
@@ -43,6 +56,13 @@ app.post("/event", (req, res) => {
 	}
 });
 
-app.listen(4002, () => {
-	console.log(`Event Bus Server is running on http://localhost:${4002}`);
+mongoose.connect(MONGO_DB_URL, (err) => {
+	if (err) {
+		console.log(err);
+	} else {
+		console.log("Connected to MongoDB");
+		app.listen(4005, () => {
+			console.log(`Event Bus Server is running on http://localhost:${4005}`);
+		});
+	}
 });
