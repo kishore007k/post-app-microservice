@@ -46,7 +46,7 @@ app.post("/post", (req, res) => {
 
 		post.save();
 
-		return res.status(201).send("Post created");
+		return res.status(201).send({ message: "Post created", post });
 	} catch (error) {
 		console.log(error);
 		return res.status(500).send(error);
