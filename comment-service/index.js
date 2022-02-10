@@ -19,11 +19,12 @@ const corsOptions = {
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
 
-app.get("/", (req, res) => {
-	res.send("Welcome to the Comments Service");
+app.get("/posts/:id/comments", (req, res) => {
+	const comments = Comment.find({});
+	return res.status(200).send(comments);
 });
 
-app.post("/post/:id/comment", (req, res) => {
+app.post("/posts/:id/comments", (req, res) => {
 	try {
 		const { comment } = req.body;
 		const { id } = req.params;
@@ -35,7 +36,7 @@ app.post("/post/:id/comment", (req, res) => {
 		});
 
 		// Post Request to Event Bus Service
-		axios.post("http://eventbus-srv:4005/event", {
+		axios.post("http://eventbus-srv:4005/events", {
 			event: "commentCreated",
 			data: {
 				comment,
@@ -47,18 +48,6 @@ app.post("/post/:id/comment", (req, res) => {
 		newComment.save();
 
 		return res.status(200).send({ message: "Comment added successfully" });
-	} catch (error) {
-		return res.status(500).send(error);
-	}
-});
-
-app.get("/post/:id/comment", async (req, res) => {
-	try {
-		const { id } = req.params;
-
-		const comments = await Comment.find({ postId: id });
-
-		return res.status(200).send(comments);
 	} catch (error) {
 		return res.status(500).send(error);
 	}

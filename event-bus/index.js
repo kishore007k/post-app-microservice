@@ -23,7 +23,7 @@ app.get("/", (req, res) => {
 	res.send("Welcome to the Event Bus Service");
 });
 
-app.post("/event", (req, res) => {
+app.post("/events", (req, res) => {
 	console.log(`${req.body.event} event received`);
 
 	try {
@@ -54,6 +54,11 @@ app.post("/event", (req, res) => {
 	} catch (error) {
 		return res.status(500).send(error);
 	}
+});
+
+app.get("/events", (req, res) => {
+	const events = Events.find();
+	return res.status(200).send(events);
 });
 
 mongoose.connect(MONGO_DB_URL, (err) => {

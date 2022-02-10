@@ -12,6 +12,7 @@ build:
 	docker build -t kishore007k/eventbus_service ./event-bus
 	docker build -t kishore007k/query_service ./query-service
 	docker build -t kishore007k/moderator_service ./moderator-service
+	docker build -t kishore007k/client ./client
 
 push-images:
 	docker push kishore007k/post_service
@@ -19,6 +20,7 @@ push-images:
 	docker push kishore007k/eventbus_service
 	docker push kishore007k/query_service
 	docker push kishore007k/moderator_service
+	docker push kishore007k/client
 
 dev:
 	docker-compose up
@@ -43,6 +45,8 @@ deploy-kubectl:
 	kubectl apply -f ./kubernetes/moderator-depl.yaml
 	kubectl apply -f ./kubernetes/eventbus-depl.yaml
 	kubectl apply -f ./kubernetes/post-serv.yaml
+	kubectl apply -f ./kubernetes/ingress-serv.yaml
+	# kubectl apply -f ./kubernetes/client-deply.yaml
 
 restart-kubectl:
 	kubectl rollout restart deployment posts-depl
@@ -57,6 +61,8 @@ remove-kubectl:
 	kubectl delete deployment query-depl
 	kubectl delete deployment moderator-depl
 	kubectl delete deployment eventbus-depl
+	kubectl delete deployment client-depl
+	kubectl delete services client-depl
 	kubectl delete services posts-depl
 	kubectl delete services comment_service
 	kubectl delete services query_service

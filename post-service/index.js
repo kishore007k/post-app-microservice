@@ -17,26 +17,18 @@ const corsOptions = {
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
 
-app.get("/", (req, res) => {
-	res.send("Welcome to the Post Service");
+app.get("/posts", (req, res) => {
+	const posts = Post.find();
+	return res.status(200).send({ posts });
 });
 
-app.get("/post/:id", async (req, res) => {
-	try {
-		const post = await Post.findById(req.params.id);
-		res.status(200).send(post);
-	} catch (error) {
-		return res.status(500).send(error);
-	}
-});
-
-app.post("/post", (req, res) => {
+app.post("/posts/create", (req, res) => {
 	try {
 		const { title, content } = req.body;
 		const post = new Post({ title, content });
 
 		// Post request to Event Bus Service
-		axios.post("http://eventbus-srv:4005/event", {
+		axios.post("http://eventbus-srv:4005/events", {
 			event: "postCreated",
 			data: {
 				title,
@@ -50,6 +42,15 @@ app.post("/post", (req, res) => {
 		return res.status(201).send({ message: "Post created", post });
 	} catch (error) {
 		console.log({ error });
+		return res.status(500).send(error);
+	}
+});
+
+app.get("/posts/:id", async (req, res) => {
+	try {
+		const post = await Post.findById(req.params.id);
+		res.status(200).send(post);
+	} catch (error) {
 		return res.status(500).send(error);
 	}
 });
