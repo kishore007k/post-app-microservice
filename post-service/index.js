@@ -65,7 +65,7 @@ mongoose.connect(MONGO_URL, (err) => {
 	} else {
 		console.log("Connected to MongoDB");
 		app.listen(4000, () => {
-			console.log(`Post Service is running on http://localhost:${4000}`);
+			console.log(`Post Service is running on http://posts-srv:${4000}`);
 		});
 	}
 });

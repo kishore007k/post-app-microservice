@@ -1,22 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: posts-depl
+  name: query-depl
   labels:
-    app: posts
+    app: query
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: posts
+      app: query
   template:
     metadata:
       labels:
-        app: posts  # <-- More like a class name in react --> #
+        app: query  # <-- More like a class name in react --> #
     spec:
       containers:
-        - name: posts
-          image: post_service
+        - name: query
+          image: kishore007k/query_service
+          ports:
+            - name: query
+              containerPort: 4002
 
 ---
 
@@ -24,13 +27,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: clusterip-posts-srv
+  name: query-srv
 spec:
   selector:
-    app: posts
+    app: query
   type: ClusterIP
   ports:
-    - name: posts
+    - name: query
       protocol: TCP
-      port: 4000
-      targetPort: 4000
+      port: 4002
+      targetPort: 4002

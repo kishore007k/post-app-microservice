@@ -1,22 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: posts-depl
+  name: moderator-depl
   labels:
-    app: posts
+    app: moderator
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: posts
+      app: moderator
   template:
     metadata:
       labels:
-        app: posts  # <-- More like a class name in react --> #
+        app: moderator  # <-- More like a class name in react --> #
     spec:
       containers:
-        - name: posts
-          image: post_service
+        - name: moderator
+          image: kishore007k/moderator_service
+          ports:
+            - name: moderator
+              containerPort: 4003
 
 ---
 
@@ -24,13 +27,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: clusterip-posts-srv
+  name: moderator-srv
 spec:
   selector:
-    app: posts
+    app: moderator
   type: ClusterIP
   ports:
-    - name: posts
+    - name: moderator
       protocol: TCP
-      port: 4000
-      targetPort: 4000
+      port: 4003
+      targetPort: 4003

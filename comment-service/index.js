@@ -35,7 +35,7 @@ app.post("/post/:id/comment", (req, res) => {
 		});
 
 		// Post Request to Event Bus Service
-		axios.post("http://localhost:4005/event", {
+		axios.post("http://eventbus-srv:4005/event", {
 			event: "commentCreated",
 			data: {
 				comment,
@@ -66,6 +66,7 @@ app.get("/post/:id/comment", async (req, res) => {
 
 app.post("/events", async (req, res) => {
 	console.log(`${req.body.event} event received`);
+
 	const { event, data } = req.body;
 
 	if (event === "commentModerated") {
@@ -90,7 +91,7 @@ mongoose.connect(MONGO_DB_URL, (err) => {
 	} else {
 		console.log("Connected to MongoDB");
 		app.listen(4001, () => {
-			console.log(`Comment Service is running on http://localhost:${4001}`);
+			console.log(`Comment Service is running on http://comments-srv:${4001}`);
 		});
 	}
 });

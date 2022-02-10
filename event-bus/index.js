@@ -42,13 +42,13 @@ app.post("/event", (req, res) => {
 		axios.post("http://clusterip-posts-srv:4000/events", eventData);
 
 		// Comment Service
-		// axios.post("http://localhost:4001/events", eventData);
+		axios.post("http://comments-srv:4001/events", eventData);
 
 		// Query Service
-		// axios.post("http://localhost:4002/events", eventData);
+		axios.post("http://query-srv:4002/events", eventData);
 
 		// Moderator Service
-		// axios.post("http://localhost:4003/events", eventData);
+		axios.post("http://moderator-srv:4003/events", eventData);
 
 		return res.status(201).send("Event received");
 	} catch (error) {
@@ -62,7 +62,7 @@ mongoose.connect(MONGO_DB_URL, (err) => {
 	} else {
 		console.log("Connected to MongoDB");
 		app.listen(4005, () => {
-			console.log(`Event Bus Server is running on http://localhost:${4005}`);
+			console.log(`Event Bus Server is running on http://eventbus-srv:${4005}`);
 		});
 	}
 });
